@@ -36,7 +36,7 @@ services:
       - ./data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
 Jalankan container di latar belakang (detached mode):
-
+```
 Bash
 docker compose up -d
 Tunggu beberapa saat hingga Floci siap menerima permintaan (cek status via docker compose logs floci).
@@ -79,4 +79,32 @@ Setelah berhasil diunggah, website statis kamu sudah live di server lokal dan bi
 [ ] Mengimplementasikan GitHub Actions (CI/CD Pipeline) menggunakan Self-Hosted Runner atau Act untuk otomatisasi deployment setiap kali ada push ke branch utama.
 
 [ ] Integrasi layanan CloudFront untuk simulasi CDN (Content Delivery Network).
+
+## 🏛️ Arsitektur Sistem
+
+```mermaid
+graph LR
+    subgraph Internet / Cloud
+        B[🐙 GitHub Repository]
+        C[⚙️ GitHub Actions]
+    end
+
+    subgraph Local Environment PC
+        A[👨‍💻 Developer]
+        D[💻 Self-Hosted Runner]
+        E[(☁️ Floci: Local S3 Bucket)]
+    end
+    
+    F[🌐 Web Browser]
+
+    A -->|1. git push| B
+    B -->|2. Trigger Workflow| C
+    C -->|3. Dispatch Job| D
+    D -->|4. eksekusi aws s3 cp| E
+    F -->|5. Akses URL localhost| E
+    
+    classDef local fill:#e6f3ff,stroke:#4a90e2,stroke-width:2px;
+    classDef cloud fill:#f3e6ff,stroke:#9b59b6,stroke-width:2px;
+    class A,D,E,F local;
+    class B,C cloud;
 ```
