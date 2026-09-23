@@ -20,3 +20,7 @@ jobs:
           AWS_ACCESS_KEY_ID: test
           AWS_SECRET_ACCESS_KEY: test
           AWS_DEFAULT_REGION: us-east-1
+      - name: Upload to Local S3 & Invalidate Cache
+        run: |
+          aws --endpoint-url http://127.0.0.1:4566 s3 cp index.html s3://portofolio-ku/index.html
+          aws --endpoint-url http://127.0.0.1:4566 cloudfront create-invalidation --distribution-id ID_DISTRIBUSI_KAMU --paths "/*"
